@@ -30,6 +30,8 @@ android {
 dependencies {
     api(project(":coil-base"))
 
+    implementation ("com.google.firebase:firebase-storage-ktx:19.2.0")
+
     addTestDependencies(KotlinCompilerVersion.VERSION)
     addAndroidTestDependencies(KotlinCompilerVersion.VERSION)
 }

@@ -80,6 +80,7 @@ internal val DataSource.emoji: String
         DataSource.MEMORY_CACHE,
         DataSource.MEMORY -> Emoji.BRAIN
         DataSource.DISK -> Emoji.FLOPPY
+        DataSource.STORAGE,
         DataSource.NETWORK -> Emoji.CLOUD
     }
 
