@@ -5,22 +5,21 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import coil.util.Logger
 import coil.memory.MemoryCache.Key
-import coil.util.identityHashCode
 import com.jakewharton.disklrucache.DiskLruCache
 import java.io.*
 
 /** An disk cache that holds strong references [Bitmap]s. */
-internal interface ImageDiskCache {
+internal interface DiskCache {
 
     companion object {
         operator fun invoke(
             context: Context,
             maxSize: Long,
             logger: Logger?
-        ): ImageDiskCache {
+        ): DiskCache {
             return when {
-                maxSize > 0 -> RealImageDiskCache(context, maxSize, logger)
-                else -> EmptyImageDiskCache
+                maxSize > 0 -> RealDiskCache(context, maxSize, logger)
+                else -> EmptyDiskCache
             }
         }
     }
@@ -43,10 +42,13 @@ internal interface ImageDiskCache {
     /** Remove all values from this cache. */
     fun clearCache()
 
+    /** Force buffered operations to the file system. */
+    fun flush()
+
 }
 
 /** A [StrongMemoryCache] implementation that caches nothing. */
-private object EmptyImageDiskCache : ImageDiskCache {
+private object EmptyDiskCache : DiskCache {
 
     override val size: Long get() = 0
 
@@ -60,14 +62,16 @@ private object EmptyImageDiskCache : ImageDiskCache {
 
     override fun clearCache() {}
 
+    override fun flush() {}
+
 }
 
 /** A [StrongMemoryCache] implementation backed by an [LruCache]. */
-private class RealImageDiskCache(
+private class RealDiskCache(
     context: Context,
     maxSize: Long,
     private val logger: Logger?
-) : ImageDiskCache {
+) : DiskCache {
 
     private val cache = DiskLruCache.open(context.cacheDir, 1, 1, maxSize) //10 * 1024 * 1024
 
@@ -138,6 +142,10 @@ private class RealImageDiskCache(
     override fun clearCache() {
         //logger?.log(TAG, Log.VERBOSE) { "clearMemory" }
         cache.delete()
+    }
+
+    override fun flush() {
+        cache.flush()
     }
 
     companion object {

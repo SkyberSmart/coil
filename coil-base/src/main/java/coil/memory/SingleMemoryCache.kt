@@ -8,17 +8,17 @@ import coil.memory.MemoryCache.Key
 import coil.util.allocationByteCountCompat
 
 /** An in-memory cache that holds strong references [Bitmap]s. */
-internal interface ImageMemoryCache {
+internal interface SingleMemoryCache {
 
     companion object {
         operator fun invoke(
             referenceCounter: BitmapReferenceCounter,
             maxSize: Int,
             logger: Logger?
-        ): ImageMemoryCache {
+        ): SingleMemoryCache {
             return when {
-                maxSize > 0 -> RealImageMemoryCache(referenceCounter, maxSize, logger)
-                else -> EmptyImageMemoryCache
+                maxSize > 0 -> RealSingleMemoryCache(referenceCounter, maxSize, logger)
+                else -> EmptySingleMemoryCache
             }
         }
     }
@@ -46,7 +46,7 @@ internal interface ImageMemoryCache {
 }
 
 /** A [StrongMemoryCache] implementation that caches nothing. */
-private object EmptyImageMemoryCache : ImageMemoryCache {
+private object EmptySingleMemoryCache : SingleMemoryCache {
 
     override val size get() = 0
 
@@ -64,11 +64,11 @@ private object EmptyImageMemoryCache : ImageMemoryCache {
 }
 
 /** A [StrongMemoryCache] implementation backed by an [LruCache]. */
-private class RealImageMemoryCache(
+private class RealSingleMemoryCache(
     private val referenceCounter: BitmapReferenceCounter,
     maxSize: Int,
     private val logger: Logger?
-) : ImageMemoryCache {
+) : SingleMemoryCache {
 
     private val cache = object : androidx.collection.LruCache<Key, InternalValue>(maxSize) {
         override fun entryRemoved(

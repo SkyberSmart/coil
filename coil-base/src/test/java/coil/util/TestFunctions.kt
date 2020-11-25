@@ -9,6 +9,7 @@ import androidx.core.graphics.createBitmap
 import org.robolectric.Shadows
 
 const val DEFAULT_BITMAP_SIZE = 40000 // 4 * 100 * 100
+const val DEFAULT_BITMAP_SIZE_ON_DISK = 80 // guess!!
 
 fun createBitmap(
     width: Int = 100,

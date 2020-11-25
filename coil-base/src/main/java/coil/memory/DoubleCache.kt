@@ -9,8 +9,8 @@ import coil.memory.MemoryCache.Key
 //SOURCE: https://www.lvguowei.me/post/android-design-pattern-imageloader/
 
 internal class DoubleCache(
-    private val memCache: ImageMemoryCache,
-    private val diskCache: ImageDiskCache,
+    private val memCache: SingleMemoryCache,
+    private val diskCache: DiskCache,
     private val referenceCounter: BitmapReferenceCounter
 ) : MemoryCache {
 
