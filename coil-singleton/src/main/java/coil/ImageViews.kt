@@ -12,6 +12,7 @@ import coil.request.Disposable
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.util.CoilUtils
+import com.google.firebase.storage.StorageReference
 import okhttp3.HttpUrl
 import java.io.File
 
@@ -70,6 +71,14 @@ inline fun ImageView.load(
     imageLoader: ImageLoader = context.imageLoader,
     builder: ImageRequest.Builder.() -> Unit = {}
 ): Disposable = loadAny(bitmap, imageLoader, builder)
+
+/** @see ImageView.loadAny */
+@JvmSynthetic
+inline fun ImageView.load(
+    reference: StorageReference?,
+    imageLoader: ImageLoader = context.imageLoader,
+    builder: ImageRequest.Builder.() -> Unit = {}
+): Disposable = loadAny(reference, imageLoader, builder)
 
 /**
  * Load the image referenced by [data] and set it on this [ImageView].

@@ -43,6 +43,8 @@ dependencies {
     implementation(Library.ANDROIDX_LIFECYCLE_RUNTIME)
 
     implementation ("com.jakewharton:disklrucache:2.0.2")
+    implementation ("com.google.firebase:firebase-storage-ktx:19.2.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1")
 
     api(Library.OKHTTP)
     api(Library.OKIO)

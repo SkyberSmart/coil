@@ -38,5 +38,10 @@ enum class DataSource {
     /**
      * Represents a network-based data source (e.g. [HttpUrl]).
      */
-    NETWORK
+    NETWORK,
+
+    /**
+     * Represents a Firebase Storage data source (e.g. [StorageReference]).
+     */
+    STORAGE
 }

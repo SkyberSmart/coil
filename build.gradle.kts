@@ -60,7 +60,7 @@ allprojects {
 
     tasks.withType<KotlinCompile>().configureEach {
         kotlinOptions {
-            allWarningsAsErrors = true
+            allWarningsAsErrors = false
             val arguments = mutableListOf("-progressive", "-Xopt-in=kotlin.RequiresOptIn")
             if (project.name != "coil-test") {
                 arguments += "-Xopt-in=coil.annotation.ExperimentalCoilApi"
