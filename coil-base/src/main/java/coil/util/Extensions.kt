@@ -41,6 +41,7 @@ import okhttp3.Headers
 import java.io.Closeable
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.CoroutineContext
+import java.security.MessageDigest
 
 internal inline val ActivityManager.isLowRamDeviceCompat: Boolean
     get() = SDK_INT < 19 || isLowRamDevice
@@ -198,3 +199,14 @@ internal inline fun BitmapReferenceCounter.decrement(drawable: Drawable?) {
 internal inline fun BitmapReferenceCounter.setValid(bitmap: Bitmap?, isValid: Boolean) {
     if (bitmap != null) setValid(bitmap, isValid)
 }
+
+
+//SOURCE: https://medium.com/better-programming/10-useful-kotlin-string-extensions-46772b653f71
+val String.md5: String
+    get() {
+        val bytes = MessageDigest.getInstance("MD5").digest(this.toByteArray())
+        return bytes.joinToString("") {
+            "%02x".format(it)
+        }
+    }
+

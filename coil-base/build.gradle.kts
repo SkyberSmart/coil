@@ -42,6 +42,8 @@ dependencies {
     api(Library.ANDROIDX_LIFECYCLE_COMMON)
     implementation(Library.ANDROIDX_LIFECYCLE_RUNTIME)
 
+    implementation ("com.jakewharton:disklrucache:2.0.2")
+
     api(Library.OKHTTP)
     api(Library.OKIO)
 

@@ -7,6 +7,7 @@ import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.request.SuccessResult
 import coil.size.Size
+import coil.util.md5
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -39,6 +40,8 @@ interface MemoryCache {
     /** The cache key for an image in the memory cache. */
     sealed class Key : Parcelable {
 
+        abstract val md5: String
+
         companion object {
             /** Create a simple memory cache key. */
             @JvmStatic
@@ -48,7 +51,11 @@ interface MemoryCache {
 
         /** A simple memory cache key that wraps a [String]. Create new instances using [invoke]. */
         @Parcelize
-        internal data class Simple(val value: String) : Key()
+        internal data class Simple(
+            val value: String
+            ) : Key() {
+                override val md5 get() = value.md5
+            }
 
         /**
          * A complex memory cache key. Instances cannot be created directly as they often cannot be created
@@ -65,6 +72,8 @@ interface MemoryCache {
             val transformations: List<String>,
             val size: Size?,
             val parameters: Map<String, String>
-        ) : Key()
+        ) : Key() {
+            override val md5 get() = base.md5
+        }
     }
 }
