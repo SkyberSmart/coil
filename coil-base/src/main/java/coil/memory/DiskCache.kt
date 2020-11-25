@@ -3,6 +3,7 @@ package coil.memory
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import coil.util.Logger
 import coil.memory.MemoryCache.Key
 import com.jakewharton.disklrucache.DiskLruCache
@@ -73,7 +74,7 @@ private class RealDiskCache(
     private val logger: Logger?
 ) : DiskCache {
 
-    private val cache = DiskLruCache.open(context.cacheDir, 1, 1, maxSize) //10 * 1024 * 1024
+    private var cache = DiskLruCache.open(context.cacheDir, 1, 1, maxSize) //10 * 1024 * 1024
 
     override val size get() = cache.size()
 
@@ -130,18 +131,22 @@ private class RealDiskCache(
 
     @Synchronized
     override fun remove(key: Key): Boolean {
-        try {
+        return try {
             cache.remove(key.md5)
         } catch (error: IOException){
-            return false
+            logger?.log(TAG, Log.ERROR, null, error)
+            false
         }
-        return true
     }
 
     @Synchronized
     override fun clearCache() {
         //logger?.log(TAG, Log.VERBOSE) { "clearMemory" }
+        val cacheDir = cache.directory
+        val maxSize = cache.maxSize
+
         cache.delete()
+        cache = DiskLruCache.open(cacheDir, 1, 1, maxSize) //Reopen cache (closed in delete)
     }
 
     override fun flush() {
